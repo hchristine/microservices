@@ -1,0 +1,122 @@
+services:
+  nats:
+    image: nats
+    command: -DV
+    ports:
+      - 8222:8222
+
+  gateway:
+    build:
+      context: gateway
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./gateway/src:/app/src
+    environment:
+      - TRANSPORT_ENDPOINT=http://nats
+      - SECRET=kajshiywtef78ash
+
+  products:
+    build:
+      context: products
+      dockerfile: Dockerfile
+    environment:
+      - TRANSPORT_ENDPOINT=http://nats
+      - DB_URI=postgresql://christine:pass1@products_db:5432/microservices
+      - SECRET=kajshiywtef78ash
+    volumes:
+      - ./products/src:/app/src
+  products_db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=microservices
+
+  users:
+    build:
+      context: users
+      dockerfile: Dockerfile
+    environment:
+      - TRANSPORT_ENDPOINT=http://nats
+      - DB_URI=postgresql://christine:pass1@users_db:5432/users
+      - SECRET=kajshiywtef78ash
+    volumes:
+      - ./users/src:/app/src
+  users_db:
+    image: postgres
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=users
+
+  orders:
+    build:
+      context: orders
+      dockerfile: Dockerfile
+    environment:
+      - TRANSPORT_ENDPOINT=http://nats
+      - DB_URI=postgresql://christine:pass1@orders_db:5432/orders
+      - SECRET=kajshiywtef78ash
+    volumes:
+      - ./orders/src:/app/src
+  orders_db:
+    image: postgres
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=orders
+  # Feedbacks
+  feedbacks:
+    build:
+      context: feedbacks
+      dockerfile: Dockerfile
+    environment:
+      - DB_URI=postgresql://christine:pass1@feedbacks_db:5432/feedbacks
+      - TRANSPORT_ENDPOINT=http://nats
+    volumes:
+      - ./feedbacks/src:/app/src
+  feedbacks_db:
+    image: postgres
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=feedbacks
+
+  # Notifications
+  notifications:
+    build:
+      context: notifications
+      dockerfile: Dockerfile
+    environment:
+      - DB_URI=postgresql://christine:pass1@notifications_db:5432/notifications
+      - TRANSPORT_ENDPOINT=http://nats
+    volumes:
+      - ./notifications/src:/app/src
+  notifications_db:
+    image: postgres
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=notifications
+
+  payments:
+    build:
+      context: payments
+      dockerfile: Dockerfile
+    environment:
+      - TRANSPORT_ENDPOINT=http://nats
+      - STRIPE_API_KEY=sk_test_51LlbTHIQycyl3PESjgfGPZsJ13us92SfubrYMODFvdJ8ZQ72il0Bk1m9aJIG4Q1cz7W2Nr7fDR7tKqFyHtzaFNId00GkctWrvQ
+    volumes:
+      - ./payments/src:/app/src

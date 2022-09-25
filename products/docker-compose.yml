@@ -1,0 +1,17 @@
+services:
+  db: 
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=microservices
+
+  app: 
+    build: .
+    environment:
+      - DB_URI=postgresql://christine:pass1@db:5432/microservices
+      - SECRET=kajshiywtef78ash
+    volumes:
+      - ./src:/products/src

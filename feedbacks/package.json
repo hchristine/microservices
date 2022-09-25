@@ -1,0 +1,27 @@
+{
+  "name": "feedbacks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc --watch",
+    "start": "concurrently 'yarn compile' 'yarn server'",
+    "server": "nodemon --inspect ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "microservices-hk-common": "^1.1.16",
+    "nats": "^2.7.1",
+    "pg": "^8.8.0",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.18",
+    "concurrently": "^7.4.0",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.3"
+  }
+}

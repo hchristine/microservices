@@ -1,0 +1,17 @@
+services:
+  db: 
+    image: postgres
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_PASSWORD=pass1
+      - POSTGRES_USER=christine
+      - POSTGRES_DB=orders
+
+  app: 
+    build: .
+    environment:
+      - DB_URI=postgresql://christine:pass1@db:5432/orders
+      - SECRET=kajshiywtef78ash
+    volumes:
+      - ./src:/orders/src
